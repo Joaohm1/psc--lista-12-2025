@@ -1,0 +1,91 @@
+package Aplicacao;
+
+public class ContaBancaria {
+	// Atributos privados (Encapsulamento)
+    private String numeroConta;
+    private String titular;
+    private double saldo; // Alteração permitida apenas via depositar() e sacar()
+
+    // Construtor
+    public ContaBancaria(String numeroConta, String titular) {
+        setNumeroConta(numeroConta); // Uso do Setter para validação
+        setTitular(titular);         // Uso do Setter para validação
+        this.saldo = 0.0; // Inicializa saldo como zero
+    }
+    
+    // --- Getters (Métodos de Acesso) ---
+
+    public String getNumeroConta() {
+        return numeroConta;
+    }
+
+    public String getTitular() {
+        return titular;
+    }
+
+    public double getSaldo() {
+        return saldo;
+    }
+
+    // --- Setters (Métodos de Modificação com Validação) ---
+
+    public void setNumeroConta(String numeroConta) {
+        // Regra de Validação: Não pode ser nulo ou vazio.
+        if (numeroConta != null && !numeroConta.trim().isEmpty()) {
+            this.numeroConta = numeroConta;
+        } else {
+            System.err.println("ERRO: O número da conta não pode ser nulo ou vazio.");
+        }
+    }
+
+    public void setTitular(String titular) {
+        // Regra de Validação: Não pode ser nulo ou vazio.
+        if (titular != null && !titular.trim().isEmpty()) {
+            this.titular = titular;
+        } else {
+            System.err.println("ERRO: O nome do titular não pode ser nulo ou vazio.");
+        }
+    }
+    
+    /* * NOTA: O Setter para 'saldo' (setSaldo) NÃO é implementado, 
+     * garantindo que o saldo seja SOMENTE LEITURA e modificado 
+     * exclusivamente pelos métodos de transação.
+     */
+
+    // --- 3. Métodos de Transação (Lógica de Negócio) ---
+
+    /**
+     * Adiciona um valor ao saldo da conta, se o valor for positivo.
+     * @param valor O valor a ser depositado.
+     */
+    public void depositar(double valor) {
+        // Lógica de Negócio: Verificar se o valor é positivo.
+        if (valor > 0) {
+            this.saldo += valor;
+            System.out.printf(" Depósito de R$
+ realizado com sucesso. Novo saldo: R$", valor, this.saldo);
+        } else {
+            System.err.println(" ERRO no Depósito: O valor a ser depositado deve ser positivo.");
+        }
+    }
+
+    /**
+     * Subtrai um valor do saldo da conta, se o valor for positivo e houver saldo suficiente.
+     * @param valor O valor a ser sacado.
+     */
+    public void sacar(double valor) {
+        // Lógica de Negócio 1: Verificar se o valor é positivo.
+        if (valor <= 0) {
+            System.err.println(" ERRO no Saque: O valor a ser sacado deve ser positivo.");
+            return;
+        }
+        
+        // Lógica de Negócio 2: Verificar se há saldo suficiente.
+        if (valor <= this.saldo) {
+            this.saldo -= valor;
+            System.out.printf(" Saque de R$ realizado com sucesso. Novo saldo: R$", valor, this.saldo);
+        } else {
+            System.err.printf("ERRO no Saque: Saldo insuficiente. Saldo atual: R$. Valor solicitado: R$", this.saldo, valor);
+        }
+    }
+}
